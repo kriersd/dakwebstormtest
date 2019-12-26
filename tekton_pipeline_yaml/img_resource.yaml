@@ -1,9 +1,9 @@
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
 metadata:
-  name: skaffold-image-leeroy-web
+  name: dakwebstormtest-image
 spec:
   type: image
   params:
     - name: url
-      value: github.com/kriersd/dakwebstormtest
+      value: registry.hub.docker.com/davekrier/dakwebstormtest:latest
