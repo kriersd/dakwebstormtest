@@ -13,9 +13,9 @@ spec:
           name: skaffold-git
     params:
       - name: pathToDockerFile
-        value: /workspace/extracted/Dockerfile
+        value: /workspace/git-source/Dockerfile
       - name: pathToContext
-        value: /workspace/extracted
+        value: /workspace/git-source
   outputs:
     resources:
       - name: builtImage
