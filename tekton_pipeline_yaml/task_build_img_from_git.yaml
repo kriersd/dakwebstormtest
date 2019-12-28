@@ -10,33 +10,28 @@ spec:
     params:
       - name: pathToDockerFile
         type: string
-        description: The path to the dockerfile to build
-        default: /workspace/git-source/Dockerfile
+        description: The path to the dockerfile to build /workspace/docker-source/Dockerfile
+        default: Dockerfile
       - name: pathToContext
         type: string
         description:
           The build context used by Kaniko
           (https://github.com/GoogleContainerTools/kaniko#kaniko-build-contexts)
-        default: /workspace/git-source
+        default: .
   outputs:
     resources:
       - name: builtImage
         type: image
   steps:
     - name: build-and-push
-      image: gcr.io/kaniko-project/executor:v0.14.0
-
+      image: gcr.io/kaniko-project/executor
       # specifying DOCKER_CONFIG is required to allow kaniko to detect docker credential
       env:
         - name: "DOCKER_CONFIG"
           value: "/tekton/home/.docker/"
       command:
-        - sh
-        - "-c"
-        - "
-           /kaniko/executor \
-           --dockerfile=${inputs.params.pathToDockerFile} \
-           --destination=${outputs.resources.docker-image.url} \
-           --context=${inputs.params.pathToContext}  \
-          --skip-tls-verify
-          "
+        - /kaniko/executor
+      args:
+        - --dockerfile=$(inputs.params.pathToDockerFile)
+        - --destination=$(outputs.resources.builtImage.url)
+        - --context=$(inputs.params.pathToContext)

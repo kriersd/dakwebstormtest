@@ -1,0 +1,50 @@
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: buildah-dk
+spec:
+  inputs:
+    params:
+      - name: builderimage
+        description: The location of the buildah builder image.
+        default: quay.io/buildah/stable:v1.11.0
+      - name: dockerfile
+        description: Path to the Dockerfile to build.
+        default: ./Dockerfile
+      - name: tlsverify
+        description: Verify the TLS on the registry endpoint (for push/pull to a non-TLS registry)
+        default: "true"
+    resources:
+      - name: docker-source
+        type: git
+
+  outputs:
+    resources:
+      - name: builtImage
+        type: image
+
+  steps:
+    - name: build
+      image: appsody/appsody-buildah
+      workingDir: /workspace/docker-source
+      command: ['buildah', 'bud', '--tls-verify=true', '--layers', '-f', './Dockerfile', '-t', 'registry.hub.docker.com/davekrier/dakwebstormtest:latest', '.']
+      volumeMounts:
+        - name: varlibcontainers
+          mountPath: /var/lib/containers
+      securityContext:
+        privileged: true
+
+    - name: push
+      image: appsody/appsody-buildah
+      workingDir: /workspace/docker-source
+      command: ['buildah', 'push', '--tls-verify=true', 'registry.hub.docker.com/davekrier/dakwebstormtest:latest', 'docker://registry.hub.docker.com/davekrier/dakwebstormtest:latest']
+      volumeMounts:
+        - name: varlibcontainers
+          mountPath: /var/lib/containers
+      securityContext:
+        privileged: true
+
+  volumes:
+    - name: varlibcontainers
+      emptyDir: {}
