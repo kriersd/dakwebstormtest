@@ -4,18 +4,18 @@ metadata:
   name: buildah-dk-pipeline
 spec:
   resources:
-    - name: docker-source
+    - name: skaffold-git
       type: git
-    - name: builtImage
+    - name: dakwebstormtest-image
       type: image
   tasks:
     - name: build-task
       resources:
         inputs:
           - name: docker-source
-            resource: dakwebstormtest-image
+            resource: skaffold-git
         outputs:
           - name: builtImage
-            resource: skaffold-git
+            resource: dakwebstormtest-image
       taskRef:
         name: buildah-dk

@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  name: demo-pipeline-run-1
+spec:
+  pipelineRef:
+    name: buildah-dk-pipeline
+  serviceAccountName: 'dakwebstormtestsec'
+  resources:
+    - name: skaffold-git
+      resourceRef:
+        name: skaffold-git
+    - name: dakwebstormtest-image
+      resourceRef:
+        name: dakwebstormtest-image
