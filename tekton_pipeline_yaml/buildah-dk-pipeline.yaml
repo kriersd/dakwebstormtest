@@ -13,9 +13,9 @@ spec:
       resources:
         inputs:
           - name: docker-source
-            resource: docker-source
+            resource: dakwebstormtest-image
         outputs:
           - name: builtImage
-            resource: builtImage
+            resource: skaffold-git
       taskRef:
         name: buildah-dk
