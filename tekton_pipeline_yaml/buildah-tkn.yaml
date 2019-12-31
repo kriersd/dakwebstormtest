@@ -14,7 +14,7 @@ spec:
         default: ./Dockerfile
       - name: tlsverify
         description: Verify the TLS on the registry endpoint (for push/pull to a non-TLS registry)
-        default: "false"
+        default: "true"
     resources:
       - name: docker-source
         type: git
@@ -28,7 +28,7 @@ spec:
     - name: build
       image: quay.io/buildah/stable:v1.11.0
       workingDir: /workspace/docker-source
-      command: ['buildah', 'bud', '--tls-verify=true', '--layers', '-f', './Dockerfile', '-t', 'registry.hub.docker.com/davekrier/dakwebstormtest:latest', '.']
+      command: ['buildah', 'bud', '--tls-verify=false', '--layers', '-f', './Dockerfile', '-t', 'registry.hub.docker.com/davekrier/dakwebstormtest:latest', '.']
       volumeMounts:
         - name: varlibcontainers
           mountPath: /var/lib/containers
@@ -38,7 +38,7 @@ spec:
     - name: push
       image: quay.io/buildah/stable:v1.11.0
       workingDir: /workspace/docker-source
-      command: ['buildah', 'push', '--tls-verify=true', 'registry.hub.docker.com/davekrier/dakwebstormtest:latest', 'docker://registry.hub.docker.com/davekrier/dakwebstormtest:latest']
+      command: ['buildah', 'push', '--tls-verify=false', 'registry.hub.docker.com/davekrier/dakwebstormtest:latest', 'docker://registry.hub.docker.com/davekrier/dakwebstormtest:latest']
       volumeMounts:
         - name: varlibcontainers
           mountPath: /var/lib/containers
