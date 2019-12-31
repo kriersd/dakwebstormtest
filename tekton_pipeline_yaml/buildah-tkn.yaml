@@ -14,7 +14,7 @@ spec:
         default: ./Dockerfile
       - name: tlsverify
         description: Verify the TLS on the registry endpoint (for push/pull to a non-TLS registry)
-        default: "true"
+        default: "false"
     resources:
       - name: docker-source
         type: git
