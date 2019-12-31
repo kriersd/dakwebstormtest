@@ -8,27 +8,31 @@ spec:
     params:
       - name: builderimage
         description: The location of the buildah builder image.
-        default: quay.io/buildah/stable:v1.11.0
+        default: quay.io/buildah/stable:v1.14.0
       - name: dockerfile
         description: Path to the Dockerfile to build.
         default: ./Dockerfile
       - name: tlsverify
         description: Verify the TLS on the registry endpoint (for push/pull to a non-TLS registry)
-        default: "true"
+        default: "false"
     resources:
       - name: docker-source
+        outputImageDir: ''
+        targetPath: ''
         type: git
 
   outputs:
     resources:
       - name: builtImage
+        outputImageDir: /builder/home/image-outputs/builtImage
+        targetPath: ''
         type: image
 
   steps:
     - name: build
-      image: quay.io/buildah/stable:v1.11.0
+      image: appsody/appsody-buildah
       workingDir: /workspace/docker-source
-      command: ['buildah', 'bud', '--tls-verify=true', '--layers', '-f', './Dockerfile', '-t', 'registry.hub.docker.com/davekrier/dakwebstormtest:latest', '.']
+      command: ['buildah', 'bud', '--tls-verify=false', '--layers', '-f', './Dockerfile', '-t', 'registry.hub.docker.com/davekrier/dakwebstormtest', '.']
       volumeMounts:
         - name: varlibcontainers
           mountPath: /var/lib/containers
@@ -36,9 +40,9 @@ spec:
         privileged: true
 
     - name: push
-      image: quay.io/buildah/stable:v1.11.0
+      image: appsody/appsody-buildah
       workingDir: /workspace/docker-source
-      command: ['buildah', 'push', '--tls-verify=true', 'registry.hub.docker.com/davekrier/dakwebstormtest:latest', 'docker://registry.hub.docker.com/davekrier/dakwebstormtest:latest']
+      command: ['buildah', 'push', '--tls-verify=false', 'registry.hub.docker.com/davekrier/dakwebstormtest', 'docker://registry.hub.docker.com/davekrier/dakwebstormtest']
       volumeMounts:
         - name: varlibcontainers
           mountPath: /var/lib/containers

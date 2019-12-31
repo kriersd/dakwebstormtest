@@ -15,7 +15,14 @@ RUN npm install
 USER 1000
 
 # Bundle app source
-COPY . .
+COPY ./bin .
+COPY ./node_modules .
+COPY ./public .
+COPY ./routes .
+COPY ./views .
+COPY ./app.js .
+COPY ./Dockerfile .
+COPY ./package-lock.json .
 
 EXPOSE 3000
 CMD [ "npm", "start" ]
