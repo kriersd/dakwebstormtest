@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TaskRun
+metadata:
+  name: buildah-dk-task-run
+spec:
+  serviceAccountName: tutorial-service
+  taskRef:
+    name: buildah-dk
+  inputs:
+    resources:
+      - name: docker-source
+        resourceRef:
+          name: skaffold-git
+    params:
+      - name: dockerfile
+        value: ./Dockerfile
+      - name: builderimage
+        value: quay.io/buildah/stable:v1.11.0
+      - name: tlsverify
+        value: "true"
+  outputs:
+    resources:
+      - name: builtImage
+        resourceRef:
+          name: dakwebstormtest-image
