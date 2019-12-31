@@ -16,7 +16,7 @@ USER 1000
 
 # Bundle app source
 COPY ./bin .
-COPY ./node_modules .
+# COPY ./node_modules .
 COPY ./public .
 COPY ./routes .
 COPY ./views .
